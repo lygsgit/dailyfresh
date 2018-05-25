@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
 from .models import *
 from hashlib import sha1
+from django.http import HttpResponse, JsonResponse
+import json
 
 # Create your views here.
 def register(request):
     return render(request, 'df_user/register.html')
 def register_handle(request):
-    # 接收用户如数
+    # 接收用户数
     post = request.POST
+    print(type(post))
     uname = post.get('user_name')
     upwd = post.get('pwd')
     upwd2 = post.get('cpwd')
@@ -28,3 +31,7 @@ def register_handle(request):
     user.save()
     # 注册成功，转到登陆页面
     return redirect('/user/login/')
+def register_exist(request):
+    uname = request.GET.get('uname')
+    count = UserInfo.objects.filter(uname = uname).count()
+    return JsonResponse({'count':count})
